@@ -77,8 +77,7 @@ static void rec_insert(t_node_t* v, void* n, int cmp(void*, void*)) {
 	} else if (compr > 0 && !v->left) {
 		v->left = node;
 		return;
-	}
-	else if (compr < 0 && !v->right) {
+	} else if (compr < 0 && !v->right) {
 		v->right = node;
 		return;
 	}
