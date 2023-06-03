@@ -19,16 +19,16 @@ static bool rec_search(t_node_t* root, void* data, t_node_t* pos, int cmp_f(void
 static void rec_delete(t_node_t* root);
 
 tree_t* new_BST(int cmp_func(void*, void*)) {
-    tree_t* new = (tree_t*)malloc(sizeof(tree_t));
-    assert(new);
-    new->root = NULL;
-    new->cmp_func = cmp_func;
-    return new;
+	tree_t* new = (tree_t*)malloc(sizeof(tree_t));
+	assert(new);
+	new->root = NULL;
+	new->cmp_func = cmp_func;
+	return new;
 }
 
 bool BST_is_empty(tree_t* tree) {
-    assert(tree);
-    return (!tree->root);
+	assert(tree);
+	return (!tree->root);
 }
 
 void BST_insert(tree_t* tree, void* n) {
@@ -93,51 +93,51 @@ static void rec_insert(t_node_t* v, void* n, int cmp(void*, void*)) {
 }
 
 bool BST_search(tree_t* tree, void* data, t_node_t* pos) {
-    assert(tree);
-    if (BST_is_empty(tree))
-        return false;
-    return rec_search(tree->root, data, pos, tree->cmp_func);
+	assert(tree);
+	if (BST_is_empty(tree))
+		return false;
+	return rec_search(tree->root, data, pos, tree->cmp_func);
 }
 
 static bool rec_search(t_node_t* root, void* data, t_node_t* pos, int cmp_f(void*, void*)) {
-    if (!root)
-        return false;
-    
-    int compr = (*cmp_f)(data, root->val);
-    if (compr == 0) {
-        pos = root;
-        return true;
-    } else if (compr < 0) {
-        return rec_search(root->left, data, pos, cmp_f);
-    } else {
-        return rec_search(root->right, data, pos, cmp_f);
-    }
+	if (!root)
+		return false;
+
+	int compr = (*cmp_f)(data, root->val);
+	if (compr == 0) {
+		pos = root;
+		return true;
+	} else if (compr < 0) {
+		return rec_search(root->left, data, pos, cmp_f);
+	} else {
+		return rec_search(root->right, data, pos, cmp_f);
+	}
 }
 
 void BST_remove(tree_t* tree, void* data) {
-    assert(tree);
-    t_node_t* pos = NULL;
-    bool is_there = BST_search(tree, data, pos);
-    
-    if (!is_there) 
-        return;
+	assert(tree);
+	t_node_t* pos = NULL;
+	bool is_there = BST_search(tree, data, pos);
 
-    free(pos->val);
-    free(pos);
-    return;
+	if (!is_there) 
+		return;
+
+	free(pos->val);
+	free(pos);
+	return;
 }
 
 void BST_delete_tree(tree_t* tree) {
-    assert(tree);
-    rec_delete(tree->root);
-    free(tree);
+	assert(tree);
+	rec_delete(tree->root);
+	free(tree);
 }
 
 static void rec_delete (t_node_t* root) {
-    if (root) {
-        rec_delete(root->left);
-        rec_delete(root->right);
-        free(root->val);
-        free(root);
-    }
+	if (root) {
+		rec_delete(root->left);
+		rec_delete(root->right);
+		free(root->val);
+		free(root);
+	}
 }
