@@ -141,4 +141,3 @@ static void rec_delete (t_node_t* root) {
 		free(root);
 	}
 }
-
