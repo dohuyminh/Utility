@@ -14,9 +14,9 @@
     ignoring this warning
 */
 
-void rec_insert(t_node_t* root, void* data, int cmp_f(void*, void*));
-bool rec_search(t_node_t* root, void* data, t_node_t* pos, int cmp_f(void*, void*));
-void rec_delete(t_node_t* root);
+static void rec_insert(t_node_t* root, void* data, int cmp_f(void*, void*));
+static bool rec_search(t_node_t* root, void* data, t_node_t* pos, int cmp_f(void*, void*));
+static void rec_delete(t_node_t* root);
 
 tree_t* new_BST(int cmp_func(void*, void*)) {
     tree_t* new = (tree_t*)malloc(sizeof(tree_t));
@@ -64,7 +64,7 @@ void BST_insert(tree_t* tree, void* n) {
 	return;
 }
 
-void rec_insert(t_node_t* v, void* n, int cmp(void*, void*)) {
+static void rec_insert(t_node_t* v, void* n, int cmp(void*, void*)) {
 	t_node_t* node = (t_node_t*)malloc(sizeof(t_node_t));
 	assert(node);
 	node->left = node->right = NULL;
@@ -100,7 +100,7 @@ bool BST_search(tree_t* tree, void* data, t_node_t* pos) {
     return rec_search(tree->root, data, pos, tree->cmp_func);
 }
 
-bool rec_search(t_node_t* root, void* data, t_node_t* pos, int cmp_f(void*, void*)) {
+static bool rec_search(t_node_t* root, void* data, t_node_t* pos, int cmp_f(void*, void*)) {
     if (!root)
         return false;
     
@@ -134,7 +134,7 @@ void BST_delete_tree(tree_t* tree) {
     free(tree);
 }
 
-void rec_delete (t_node_t* root) {
+static void rec_delete (t_node_t* root) {
     if (root) {
         rec_delete(root->left);
         rec_delete(root->right);
