@@ -3,6 +3,8 @@
 #ifndef QUEUE_H_
 #define QUEUE_H_
 
+/* Update: dequeue function updated, see queue.c C source file */
+
 typedef struct node q_node_t;
 
 struct node {
@@ -25,7 +27,7 @@ void* back(queue_t* queue);
 
 void enqueue(queue_t* queue, void* data);
 
-void dequeue(queue_t* queue);
+void dequeue(queue_t* queue, bool free_content);
 
 void delete_queue(queue_t* queue);
 
