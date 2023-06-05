@@ -5,9 +5,11 @@
 #include "stack.h"
 
 /*
-    NOTE: The pop function of the stack will not free the content within the 
-    plate of the stack, please manually free the content of the plate before 
-    using the pop function to prevent memory leaks
+    Update: now the pop function can give the user the choice to
+    free the content within the stack or not
+    
+    The delete stack function will set free_content to true as 
+    default, though. Use with caution.
 */
 
 stack_t* new_stack () {
@@ -43,13 +45,15 @@ void push(stack_t* stack, void* data) {
     return;
 }
 
-void pop(stack_t* stack) {
+void pop(stack_t* stack, bool free_content) {
     assert(stack);
     if (stack_is_empty(stack))
         return;
 
     s_node_t* plate = stack->top;
     stack->top = stack->top->next;
+    if (free_content)
+        free(plate->val);
     free(plate);
     plate = NULL;
 }
@@ -57,8 +61,7 @@ void pop(stack_t* stack) {
 void delete_stack(stack_t* stack) {
     assert(stack);
     while (!stack_is_empty(stack)) {
-        free(top(stack));
-        pop(stack);
+        pop(stack, true);
     }
     free(stack);
 }
