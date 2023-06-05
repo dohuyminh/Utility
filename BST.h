@@ -22,7 +22,7 @@ bool BST_is_empty(tree_t* tree);
 
 void BST_insert(tree_t* tree, void* data);
 
-bool BST_search(tree_t* tree, void* data, t_node_t* pos);
+bool BST_search(tree_t* tree, void* data);
 
 void BST_remove(tree_t* tree, void* data);
 
