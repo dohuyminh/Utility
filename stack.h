@@ -1,5 +1,7 @@
 #include <stdbool.h>
 
+/* Updated pop functon: see in stack.c C source file */
+
 #ifndef STACK_H_
 #define STACK_H_
 
@@ -22,7 +24,7 @@ void* top(stack_t* stack);
 
 void push(stack_t* stack, void* val);
 
-void pop(stack_t* stack);
+void pop(stack_t* stack, bool free_content);
 
 void delete_stack(stack_t* stack);
 
