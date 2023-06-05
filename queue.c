@@ -4,9 +4,11 @@
 #include "queue.h"
 
 /*
-    NOTE: The function dequeue will not free the content inside the data of
-    the member of the queue, please manually free the content before using the 
-    dequeue function
+    Update: The function dequeue now give the user the decision
+    to whether free the content inside the queue
+    
+    The function delete_queue still set free_content as default, 
+    freeing all the content inside the queue. Use with caution
 */
 
 queue_t* new_queue() {
@@ -47,13 +49,15 @@ void enqueue(queue_t* queue, void* data) {
     return;
 }
 
-void dequeue(queue_t* queue) {
+void dequeue(queue_t* queue, bool free_content) {
     assert(queue);
     if (queue_is_empty(queue))
         return;
     
     q_node_t* mem = queue->front;
     queue->front = queue->front->next;
+    if (free_content)
+        free(mem->val);
     free(mem); mem = NULL;
 
     if (!queue->front)
@@ -65,8 +69,7 @@ void dequeue(queue_t* queue) {
 void delete_queue(queue_t* queue) {
     assert(queue);
     while (!queue_is_empty(queue)) {
-        free(front(queue));
-        dequeue(queue);
+        dequeue(queue, true);
     }
     free(queue); queue = NULL;
 }
