@@ -23,8 +23,10 @@ void heap_push(heap_t* heap, data_t val);
 
 void heap_pop(heap_t* heap, bool free_content);
 
+void build_heap(data_t* array, size_t size, int cmp(data_t, data_t));
+
 heap_t* delete_heap(heap_t* heap, bool free_content);
 
-void heap_sort(data_t* array, size_t n, int cmpfunc(data_t, data_t));
+void heap_sort(data_t* array, size_t n, int cmpfunc(data_t, data_t), bool reversed);
 
 #endif
