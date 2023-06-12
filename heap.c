@@ -14,8 +14,10 @@ static int left_child(int root_ind);
 static int parent(int child);
 static void swap(data_t* n1, data_t* n2);
 
-static void sift_up(heap_t* heap);
-static void sift_down(heap_t* heap);
+static void sift_up(data_t* heap, size_t size, int child, 
+	int cmp(data_t, data_t));
+static void sift_down(data_t* heap, size_t size, int parent, 
+	int cmp(data_t, data_t));
 
 /* ------------------------------------------------------ */
 
@@ -50,7 +52,7 @@ void heap_push(heap_t* h, data_t val) {
 
 	h->heap[h->size - 1] = val;
 	
-	sift_up(h);
+	sift_up(h->heap, h->size, (int)h->size - 1, h->cmp);
 
 }
 
@@ -67,8 +69,7 @@ void heap_pop(heap_t* h, bool free_content) {
 		return;
 
 	h->heap[0] = last;
-
-	sift_down(h);
+	sift_down(h->heap, h->size, 0, h->cmp);
 }
 
 heap_t* delete_heap(heap_t* h, bool free_content)  {
@@ -83,21 +84,24 @@ heap_t* delete_heap(heap_t* h, bool free_content)  {
 	return NULL;
 }
 
-void heap_sort(data_t* array, size_t n, int cmpfunc(data_t, data_t)) {
-	heap_t* h = new_heap(cmpfunc);
-	assert(h);
-
-	for (int i = 0; i < n; ++i) {
-		heap_push(h, array[i]);
+void build_heap(data_t* array, size_t size, int cmp(data_t, data_t)) {
+	for (int i = size / 2 - 1; i > -1; --i) {
+		sift_down(array, size, i, cmp);
 	}
+}
 
-	int j = 0;
-	while (!heap_is_empty(h)) {
-		array[j++] = peek(h);
-		heap_pop(h, false);
+void heap_sort(data_t* array, size_t n, int cmpfunc(data_t, data_t),
+	bool reversed) {
+	build_heap(array, n, cmpfunc);
+	for (int i = n-1; i > 0; --i) {
+		swap(&array[0], &array[i]);
+		sift_down(array, i, 0, cmpfunc);
 	}
-
-	h = delete_heap(h, false);
+	if (!reversed) {
+		for (int j = 0; j < n/2; ++j) {
+			swap(&array[j], &array[n-j-1]);
+		}
+	}
 }
 
 /* ------------------------------------------------------ */
@@ -123,31 +127,31 @@ static void swap(data_t* n1, data_t* n2) {
 	*n2 = tmp;
 }
 
-static void sift_up(heap_t* h) {
-	int last = h->size - 1;
+static void sift_up(data_t* heap, size_t size, int last, 
+	int cmp(data_t, data_t)) {
 	while (last > 0) {
 		int pLast = parent(last);
-		if (pLast < h->size && (*h->cmp)(h->heap[last], h->heap[pLast]) < 0) {
-			swap(&h->heap[last], &h->heap[pLast]);
+		if (pLast < size && (*cmp)(heap[last], heap[pLast]) < 0) {
+			swap(&heap[last], &heap[pLast]);
 			last = pLast;
 		} else	
 			return;
 	}
 }
 
-static void sift_down(heap_t* h) {
-	int parent = 0; 
-	while (parent < (int)h->size) {
+static void sift_down(data_t* heap, size_t size, int parent, 
+	int cmp(data_t, data_t)) {
+	while (parent < (int)size) {
 		int child = left_child(parent);
 		
-		if (child >= h->size)
+		if (child >= size)
 			return;
 		
-		if (child + 1 < (int)h->size && (*h->cmp)(h->heap[child], h->heap[child + 1]) > 0)
+		if (child + 1 < (int)size && (*cmp)(heap[child], heap[child + 1]) > 0)
 			++child;
 
-		if ((*h->cmp)(h->heap[parent], h->heap[child]) > 0) {
-			swap(&h->heap[parent], &h->heap[child]);
+		if ((*cmp)(heap[parent], heap[child]) > 0) {
+			swap(&heap[parent], &heap[child]);
 			parent = child;
 		} else 
 			return;
