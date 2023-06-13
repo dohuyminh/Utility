@@ -10,6 +10,12 @@
 
 /* ------------------------------------------------------ */
 
+/*
+	Update: The current implementation of heap
+	is set default as max-heap; if min-heap is
+	required, adjust the comparison funcion
+*/
+
 static int left_child(int root_ind);
 static int parent(int child);
 static void swap(data_t* n1, data_t* n2);
@@ -97,7 +103,7 @@ void heap_sort(data_t* array, size_t n, int cmpfunc(data_t, data_t),
 		swap(&array[0], &array[i]);
 		sift_down(array, i, 0, cmpfunc);
 	}
-	if (!reversed) {
+	if (reversed) {
 		for (int j = 0; j < n/2; ++j) {
 			swap(&array[j], &array[n-j-1]);
 		}
@@ -131,7 +137,7 @@ static void sift_up(data_t* heap, size_t size, int last,
 	int cmp(data_t, data_t)) {
 	while (last > 0) {
 		int pLast = parent(last);
-		if (pLast < size && (*cmp)(heap[last], heap[pLast]) < 0) {
+		if (pLast < size && (*cmp)(heap[last], heap[pLast]) > 0) {
 			swap(&heap[last], &heap[pLast]);
 			last = pLast;
 		} else	
@@ -147,10 +153,10 @@ static void sift_down(data_t* heap, size_t size, int parent,
 		if (child >= size)
 			return;
 		
-		if (child + 1 < (int)size && (*cmp)(heap[child], heap[child + 1]) > 0)
+		if (child + 1 < (int)size && (*cmp)(heap[child], heap[child + 1]) < 0)
 			++child;
 
-		if ((*cmp)(heap[parent], heap[child]) > 0) {
+		if ((*cmp)(heap[parent], heap[child]) < 0) {
 			swap(&heap[parent], &heap[child]);
 			parent = child;
 		} else 
